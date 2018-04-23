@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PhotoVault</string>
+    <string name="Cancel">Cancel</string>
+    <string name="CameraRoll">Camera Roll</string>
+    <string name="GoSettingsMsg">Go to settings page</string>
+    <string name="OK">OK</string>
 </resources>
