@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.odysseyapps.photovault.album.AlbumActivity;
+import com.odysseyapps.photovault.photofinder.AlbumActivity;
+import com.odysseyapps.photovault.videofinder.VideoAlbumActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AlbumActivity.class);
+                Intent intent = new Intent(MainActivity.this, VideoAlbumActivity.class);
                 startActivity ( intent );
             }
         });

@@ -1,4 +1,4 @@
-package com.odysseyapps.photovault.album;
+package com.odysseyapps.photovault.photofinder;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -32,9 +32,14 @@ public class AlbumActivity extends AppCompatActivity {
     private static final int REQUEST_PERMISSIONS = 100;
     boolean didPressedGalleryButton = false ;
     public static ArrayList<Model_images> al_images = new ArrayList<Model_images>();
+    //public static ArrayList<Model_images> al_videos = new ArrayList<Model_images>();
     public static ArrayList<String> allImage = new ArrayList<String>();
-    boolean boolean_folder ;
 
+    //public static ArrayList<String> allVideos = new ArrayList<String>();
+    boolean boolean_folder ;
+    GridViewAdapter gridViewAdapter;
+
+     public static int folderIndex ;
      ListView folderList ;
      GridView photoThumbnails ;
      Button galleryButton ;
@@ -51,11 +56,16 @@ public class AlbumActivity extends AppCompatActivity {
         photoThumbnails = (GridView) findViewById(R.id.AAGridView);
         galleryButton = (Button) findViewById(R.id.AAGallery);
 
+
+
+
         folderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                GridViewAdapter gridViewAdapter = new GridViewAdapter(AlbumActivity.this,AlbumActivity.al_images,position);
+                folderIndex = position;
+
+                gridViewAdapter = new GridViewAdapter(AlbumActivity.this,AlbumActivity.al_images,position);
                 photoThumbnails.setAdapter(gridViewAdapter);
 
                 if (position == 0) {
@@ -71,9 +81,39 @@ public class AlbumActivity extends AppCompatActivity {
             }
         });
 
+        gridViewAdapter = new GridViewAdapter(AlbumActivity.this,AlbumActivity.al_images,0);
+        photoThumbnails.setAdapter(gridViewAdapter);
+
         photoThumbnails.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                String selectedPath ;
+                if (folderIndex == 0) {
+                    selectedPath = allImage.get(position);
+                    //Bitmap bitmap = BitmapFactory.decodeFile(selectedPath);
+                    //MainBitmap = resize(bitmap,800,800);
+                    //myBitmap = resize(MainBitmap,300,300);
+
+                }
+                else {
+                    selectedPath = al_images.get(folderIndex - 1).getAl_imagepath().get(position);
+                }
+
+
+                if (AlbumSelection.getSharedInstance().selectedImageURIs.contains(selectedPath)) {
+                    AlbumSelection.getSharedInstance().selectedImageURIs.remove(selectedPath);
+                }
+                else{
+                    AlbumSelection.getSharedInstance().selectedImageURIs.add(selectedPath);
+                }
+
+
+
+
+
+                        gridViewAdapter.notifyDataSetChanged();
+                        photoThumbnails.invalidateViews();
 
 
             }
@@ -89,7 +129,7 @@ public class AlbumActivity extends AppCompatActivity {
                 if (didPressedGalleryButton == false) {
                     folderList.setVisibility(View.VISIBLE);
 
-                   ListViewAdapter obj_adapter = new ListViewAdapter(getApplicationContext(), al_images);
+                    ListViewAdapter obj_adapter = new ListViewAdapter(getApplicationContext(), al_images);
                     folderList.setAdapter(obj_adapter);
                     didPressedGalleryButton = true;
                 }
@@ -109,20 +149,38 @@ public class AlbumActivity extends AppCompatActivity {
                 (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
 
             ActivityCompat.requestPermissions(AlbumActivity.this,
-                    new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                    new String[]{ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQUEST_PERMISSIONS);
+
 
         }else {
             Log.e("Else","Else");
-
+            //fn_videopath();
             fn_imagespath();
-            GridViewAdapter gridViewAdapter = new GridViewAdapter(AlbumActivity.this,AlbumActivity.al_images,0);
+            gridViewAdapter = new GridViewAdapter(AlbumActivity.this,AlbumActivity.al_images,0);
             photoThumbnails.setAdapter(gridViewAdapter);
             folderList.setVisibility(View.INVISIBLE);
 
             didPressedGalleryButton = false;
 
         }
+
+
+
+        Button cancelButton = findViewById(R.id.AACancelButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> array = AlbumSelection.getSharedInstance().selectedImageURIs;
+                for(String s:array){
+                    System.out.println(s);
+                }
+                array = AlbumSelection.getSharedInstance().selectedVideoURIs;
+                for(String s:array){
+                    System.out.println(s);
+                }
+            }
+        });
 
 
 
@@ -141,7 +199,7 @@ public class AlbumActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
-
+                    //fn_videopath();
                     fn_imagespath();
                     GridViewAdapter gridViewAdapter = new GridViewAdapter(AlbumActivity.this,AlbumActivity.al_images,0);
                     photoThumbnails.setAdapter(gridViewAdapter);
@@ -185,6 +243,112 @@ public class AlbumActivity extends AppCompatActivity {
 
 
 
+//    public ArrayList<Model_images> fn_videopath() {
+//        al_videos.clear();
+//        //allImage.clear();
+//        allVideos.clear();
+//
+//        //int int_position = 0;
+//        int videoInt_position = 0;
+//
+//        //int column_index_data, column_index_folder_name;
+//        int videoColumn_index_data, videoColumn_index_folder_name;
+//
+//        //String absolutePathOfImage = null;
+//        String videoAbsolutePathOfImage = null;
+//
+//
+//        //Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+//        Uri videoUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+//
+//        //String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+//        String[] videoProjection = {MediaStore.MediaColumns.DATA, MediaStore.Video.Media.BUCKET_DISPLAY_NAME};
+//
+//        Log.e("projection", String.valueOf(videoProjection));
+//
+//        //final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
+//        final String videoOrderBy = MediaStore.Video.Media.DATE_TAKEN;
+//
+//
+//        //Cursor cursor = getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
+//        Cursor videoCursor = getApplicationContext().getContentResolver().query(videoUri, videoProjection, null, null, videoOrderBy + " DESC");
+//
+//        //column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+//        videoColumn_index_data = videoCursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+//
+//        //column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+//        videoColumn_index_folder_name = videoCursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME);
+//
+//
+//
+//        while (videoCursor.moveToNext()) {
+//            videoAbsolutePathOfImage = videoCursor.getString(videoColumn_index_data);
+//
+//            Log.e("Column", videoAbsolutePathOfImage);
+//            Log.e("Folder", videoCursor.getString(videoColumn_index_data));
+//
+//            for (int i = 0; i < al_videos.size(); i++) {
+//                if (al_videos.get(i).getStr_folder().equals(videoCursor.getString(videoColumn_index_folder_name))) {
+//                    boolean_folder = true;
+//                    videoInt_position = i;
+//                    break;
+//                } else {
+//                    boolean_folder = false;
+//                }
+//            }
+//
+//
+//
+//            if (boolean_folder) {
+//
+//                java.util.ArrayList<String> al_path = new ArrayList<>();
+//                al_path.addAll(al_videos.get(videoInt_position).getAl_imagepath());
+//                al_path.add(videoAbsolutePathOfImage);
+//                al_videos.get(videoInt_position).setAl_imagepath(al_path);
+//
+//            } else {
+//                ArrayList<String> al_path = new ArrayList<>();
+//                al_path.add(videoAbsolutePathOfImage);
+//                Model_images obj_model = new Model_images();
+//                obj_model.setStr_folder(videoCursor.getString(videoColumn_index_folder_name));
+//                obj_model.setAl_imagepath(al_path);
+//
+//                al_videos.add(obj_model);
+//            }
+//
+//
+//
+//        }
+//
+//
+//
+//
+//
+//
+//
+//        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+//
+//        for (int i = 0; i < al_videos.size(); i++) {
+//            Log.e("FOLDER", al_videos.get(i).getStr_folder());
+//            for (int j = 0; j < al_videos.get(i).getAl_imagepath().size(); j++) {
+//                Log.e("FILE", al_videos.get(i).getAl_imagepath().get(j));
+//                allVideos.add(al_videos.get(i).getAl_imagepath().get(j)) ;
+//
+////                File file = new File (al_videos.get(i).getAl_imagepath().get(j));
+////                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+////                allBitmap.add(bitmap);
+//
+//            }
+//        }
+//
+////        obj_adapter = new ListViewAdapter(getApplicationContext(),al_videos);
+////        folderList.setAdapter(obj_adapter);
+//        if(al_videos.size() != 0) {
+//            Button galleryButton = (Button)findViewById(R.id.AAGallery)  ;
+//            galleryButton.setText(getString(R.string.Videos));
+//        }
+//        return al_videos;
+//    }
 
 
     public ArrayList<Model_images> fn_imagespath() {
@@ -192,14 +356,20 @@ public class AlbumActivity extends AppCompatActivity {
         allImage.clear();
 
         int int_position = 0;
+        Uri uri;
+        Cursor cursor;
         int column_index_data, column_index_folder_name;
-        String absolutePathOfImage = null;
 
-        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        String absolutePathOfImage = null;
+        uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
         String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+
         Log.e("projection", String.valueOf(projection));
+
         final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
-        Cursor cursor = getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
+        cursor = getApplicationContext().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
+
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
         while (cursor.moveToNext()) {
@@ -220,7 +390,7 @@ public class AlbumActivity extends AppCompatActivity {
 
             if (boolean_folder) {
 
-                java.util.ArrayList<String> al_path = new ArrayList<>();
+                ArrayList<String> al_path = new ArrayList<>();
                 al_path.addAll(al_images.get(int_position).getAl_imagepath());
                 al_path.add(absolutePathOfImage);
                 al_images.get(int_position).setAl_imagepath(al_path);
@@ -257,9 +427,8 @@ public class AlbumActivity extends AppCompatActivity {
         }
 
 //        obj_adapter = new ListViewAdapter(getApplicationContext(),al_images);
-//        folderList.setAdapter(obj_adapter);
+//        lv_folder.setAdapter(obj_adapter);
         if(al_images.size() != 0) {
-            Button galleryButton = (Button)findViewById(R.id.AAGallery)  ;
             galleryButton.setText(getString(R.string.CameraRoll));
         }
         return al_images;

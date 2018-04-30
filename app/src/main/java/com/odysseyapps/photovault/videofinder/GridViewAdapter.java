@@ -1,14 +1,14 @@
-package com.odysseyapps.photovault.album;
+package com.odysseyapps.photovault.videofinder;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.odysseyapps.photovault.R;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class GridViewAdapter extends ArrayAdapter<Model_images> {
 
 
         if(int_position==0){
-            return  AlbumActivity.allImage.size();
+            return  VideoAlbumActivity.allImage.size();
         }
         else {
             return al_menu.get(int_position-1).getAl_imagepath().size();
@@ -60,8 +60,8 @@ public class GridViewAdapter extends ArrayAdapter<Model_images> {
     @Override
     public int getViewTypeCount() {
         if(int_position==0){
-            if(AlbumActivity.allImage.size()>0) {
-                return AlbumActivity.allImage.size();
+            if(VideoAlbumActivity.allImage.size()>0) {
+                return VideoAlbumActivity.allImage.size();
             }
             else {
                 return 1;
@@ -108,32 +108,79 @@ public class GridViewAdapter extends ArrayAdapter<Model_images> {
 
 
         if(int_position==0){
-            a=AlbumActivity.allImage.get(position);
-
+            a= VideoAlbumActivity.allImage.get(position);
         }
+
         else{
             a=al_menu.get(int_position-1).getAl_imagepath().get(position);
-
         }
 
-        Glide.with(context).load("file://" + a)
-                .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(viewHolder.imageView2);
 
-        /*
-        if (AlbumActivity.selection.contains(a)) {
+
+
+            try{
+                Bitmap bitmap;
+                bitmap = retriveVideoFrameFromVideo(a);
+                if (bitmap != null) {
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+                    viewHolder.imageView2.setImageBitmap(bitmap);
+                }}
+            catch (Exception e){
+
+                System.out.println("Ereor");
+
+            }
+
+
+
+
+
+
+
+
+        if (VideoAlbumSelection.getSharedInstance().selectedImageURIs.contains(a)) {
             viewHolder.imageView3.setImageResource(R.drawable.tick);
         }
         else{
             viewHolder.imageView3.setImageDrawable(null);
-        }*/
+        }
 
         return convertView;
 
 
 
     }
+
+
+    public static Bitmap retriveVideoFrameFromVideo(String videoPath)
+    {
+        Bitmap bitmap = null;
+        MediaMetadataRetriever mediaMetadataRetriever = null;
+        try {
+            mediaMetadataRetriever = new MediaMetadataRetriever();
+//            if (Build.VERSION.SDK_INT >= 14)
+//                mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
+//            else
+                mediaMetadataRetriever.setDataSource(videoPath);
+
+            bitmap = mediaMetadataRetriever.getFrameAtTime(1, MediaMetadataRetriever.OPTION_CLOSEST);
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            if (mediaMetadataRetriever != null) {
+                mediaMetadataRetriever.release();
+            }
+        }
+        return bitmap;
+
+
+    }
+
+
+
+
 
 
 

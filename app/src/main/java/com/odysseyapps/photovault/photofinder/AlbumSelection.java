@@ -1,4 +1,4 @@
-package com.odysseyapps.photovault.album;
+package com.odysseyapps.photovault.photofinder;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,8 @@ public class AlbumSelection {
         return instance;
     }
 
-    public static ArrayList<String> selectedImageURIs = new ArrayList<String>();
+     public  ArrayList<String> selectedImageURIs = new ArrayList<String>();
+     public  ArrayList<String> selectedVideoURIs = new ArrayList<String>();
 
 
 

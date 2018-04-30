@@ -1,4 +1,4 @@
-package com.odysseyapps.photovault.album;
+package com.odysseyapps.photovault.photofinder;
 
 import java.util.ArrayList;
 

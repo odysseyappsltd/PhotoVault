@@ -1,4 +1,4 @@
-package com.odysseyapps.photovault.album;
+package com.odysseyapps.photovault.videofinder;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 
 import com.odysseyapps.photovault.R;
 
@@ -75,11 +74,13 @@ public class ListViewAdapter extends ArrayAdapter<Model_images> {
         }
 
         if (position==0){
-            viewHolder.textView.setText("Camera Roll"+" ("+AlbumActivity.allImage.size()+")");
+            viewHolder.textView.setText("Video Roll"+" ("+ VideoAlbumActivity.allImage.size()+")");
         }
+
         else {
             viewHolder.textView.setText(al_menu.get(position-1).getStr_folder() + " (" + al_menu.get(position-1).getAl_imagepath().size() + ")");
         }
+
 //        viewHolder.tv_foldersize.setText(al_menu.get(position).getAl_imagepath().size()+"");
 
 

@@ -1,12 +1,4 @@
-package com.odysseyapps.photovault.album;
-
-import android.database.Cursor;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.util.Log;
-
-import java.util.ArrayList;
+package com.odysseyapps.photovault.photofinder;
 
 /**
  * Created by admin on 2018-04-18.

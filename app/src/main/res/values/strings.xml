@@ -4,4 +4,7 @@
     <string name="CameraRoll">Camera Roll</string>
     <string name="GoSettingsMsg">Go to settings page</string>
     <string name="OK">OK</string>
+    <string name="Videos">Videos</string>
+    <string name="VideoRoll">Video Roll</string>
+
 </resources>
