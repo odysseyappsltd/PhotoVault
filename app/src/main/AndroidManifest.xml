@@ -40,6 +40,11 @@
         <activity android:name=".photofinder.AlbumActivity" />
         <activity android:name=".videofinder.VideoAlbumActivity" />
         <activity android:name=".camera.CamActivity"></activity>
+        <activity android:name=".Settings.SettingsActivity"></activity>
+        <activity android:name=".IAP.IAPActivity"></activity>
+
+
+
     </application>
 
 </manifest>

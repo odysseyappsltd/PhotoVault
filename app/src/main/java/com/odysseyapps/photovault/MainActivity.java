@@ -29,9 +29,24 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.NativeAppInstallAd;
+import com.google.android.gms.ads.formats.NativeAppInstallAdView;
+import com.google.android.gms.ads.formats.NativeContentAd;
+import com.google.android.gms.ads.formats.NativeContentAdView;
+import com.odysseyapps.photovault.Admobs.Advertisement;
+import com.odysseyapps.photovault.IAP.IAPData;
+import com.odysseyapps.photovault.Settings.SettingsActivity;
+import com.odysseyapps.photovault.StaticClasses.CheckIf;
 
 import java.io.ByteArrayOutputStream;
 import java.sql.Array;
@@ -123,6 +138,70 @@ public class MainActivity extends AppCompatActivity implements selectedFiles{
         mydb = new DatabaseHelper(this);
         restoreAlbumData();
 
+
+        // Admob
+
+        MobileAds.initialize(this, Advertisement.getSharedInstance().getNativeAdvanceAdAppID());
+        final AdLoader adLoader = new AdLoader.Builder(this, Advertisement.getSharedInstance().getNativeAdvanceAdUnitID())
+                .forAppInstallAd(new NativeAppInstallAd.OnAppInstallAdLoadedListener() {
+                    @Override
+                    public void onAppInstallAdLoaded(NativeAppInstallAd appInstallAd) {
+                        // Show the app install ad.
+                        //Toast.makeText(MainActivity.this, "Ad App Install loading", Toast.LENGTH_SHORT).show();;
+                        FrameLayout frameLayout  = (FrameLayout)findViewById(R.id.AMAdmob);
+                        frameLayout.setVisibility(View.VISIBLE);
+                        NativeAppInstallAdView adView = (NativeAppInstallAdView) getLayoutInflater()
+                                .inflate(R.layout.ad_app_install, null);
+                        Advertisement.getSharedInstance().populateAppInstallAdView(appInstallAd, adView);
+                        frameLayout.removeAllViews();
+                        frameLayout.addView(adView);
+                    }
+                })
+                .forContentAd(new NativeContentAd.OnContentAdLoadedListener() {
+                    @Override
+                    public void onContentAdLoaded(NativeContentAd contentAd) {
+
+                        // Show the content ad.
+                        //Toast.makeText(MainActivity.this, "Ad Content loading", Toast.LENGTH_SHORT).show();
+                        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.AMAdmob);
+                        frameLayout.setVisibility(View.VISIBLE);
+                        NativeContentAdView adView = (NativeContentAdView) getLayoutInflater()
+                                .inflate(R.layout.ad_content, null);
+                        Advertisement.getSharedInstance().populateContentAdView(contentAd, adView);
+                        frameLayout.removeAllViews();
+                        frameLayout.addView(adView);
+                    }
+                })
+                .withAdListener(new AdListener() {
+                    @Override
+                    public void onAdLoaded() {
+                        super.onAdLoaded();
+
+
+
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        // Handle the failure by logging, altering the UI, and so on.
+                        //Toast.makeText(MainActivity.this, "Failed Ad loading", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .withNativeAdOptions(new NativeAdOptions.Builder()
+                        // Methods in the NativeAdOptions.Builder class can be
+                        // used here to specify individual options settings.
+                        .build())
+                .build();
+
+        //Admob Visibility
+        //findViewById(R.id.AMAdmob).setVisibility(View.GONE);
+        if (!CheckIf.isPurchased(IAPData.getSharedInstance().ADMOB,this)){
+            adLoader.loadAd(new AdRequest.Builder().build());
+        } else {
+            findViewById(R.id.AMAdmob).setVisibility(View.GONE);
+        }
+
+
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -132,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements selectedFiles{
             String message = intent.getStringExtra("message");
             if(message.equals("gallery")){
                 //System.out.println("gallery");
-                //galleryAct();
+                galleryAct();
             }
             else if(message.equals("capturePhoto")){
                 System.out.println("capturePhoto");
@@ -175,11 +254,12 @@ public class MainActivity extends AppCompatActivity implements selectedFiles{
     }
     public void galleryAct(){
 
-        for (int i=1;i<=4;i++)
+
+        /*for (int i=1;i<=4;i++)
         {
             imgList.add(BitmapFactory.decodeResource(getResources(), R.drawable.screen));
         }
-        addImageAlbum("0");
+        addImageAlbum("0");*/
     }
     public void addImageAlbum(String id){
 
@@ -317,10 +397,10 @@ public class MainActivity extends AppCompatActivity implements selectedFiles{
 
 
     public void addButtonAct(View view){
-        addAlbum();
-        /*Intent popUp = new Intent(this,PopUpViewActivity.class);
-        startActivity(popUp);*/
-        galleryAct();
+        //addAlbum();
+        Intent popUp = new Intent(this,PopUpViewActivity.class);
+        startActivity(popUp);
+        //galleryAct();
     }
     public void selectButtonAct(View view){
         //deleteAlbum(2);
@@ -350,6 +430,11 @@ public class MainActivity extends AppCompatActivity implements selectedFiles{
         //recyclerView.setAdapter(adapter);
 
         gridview.invalidateViews();
+
+    }
+    public void settingsBtnAct(View view){
+        Intent setting = new Intent(MainActivity.this,SettingsActivity.class);
+        startActivity(setting);
 
     }
     public void renameBtnAct(View view){

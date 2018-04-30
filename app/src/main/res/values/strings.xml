@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">PhotoVault</string>
 
+    <string name="Cancel">Cancel</string>
+    <string name="CameraRoll">Camera Roll</string>
+    <string name="GoSettingsMsg">Go to settings page</string>
+    <string name="OK">OK</string>
+    <string name="Videos">Videos</string>
+    <string name="VideoRoll">Video Roll</string>
+
+
     <string name="action_settings">Settings</string>
     <string name="action_add_favourite">Add to Favourites</string>
     <string name="action_play_next">Play Next</string>
@@ -10,4 +18,50 @@
     <string name="capture_photo">Capture Photo</string>
     <string name="capture_video">Capture Video</string>
     <string name="cancel">Cancel</string>
+    <string name="PhotoVault">Photo Vault</string>
+
+    <string name="RestoreToast">Your in-app billing has been restored</string>
+    <string name="BuyPro">Buy</string>
+
+    <string name="PRO_VERSION">Get Pro Features</string>
+    <string name="HelpSettings">HELP &amp; SETTINGS</string>
+    <string name="Help">Help</string>
+    <string name="TellAFriend">Tell A Friend</string>
+    <string name="ContactUs">Contact Us</string>
+    <string name="ShareApp">Share This App</string>
+    <string name="RateUs">Give Us A Review</string>
+    <string name="Font">Font</string>
+    <string name="FollowUs">FOLLOW US</string>
+    <string name="Facebook">Facebook</string>
+    <string name="Twitter">Twitter</string>
+    <string name="Instagram">Instagram</string>
+    <string name="LinkedIn">LinkedIn</string>
+    <string name="TellAFriendMessage">I find this app very helpful. I think you may like it too! Check it out:</string>
+    <string name="AppLink">App Link</string>
+
+    <string name="ContactUsTitle">Feedback for Photo Vault</string>
+    <string name="ContactUsBody">Compose your message here..</string>
+    <string name="DeviceOS">Device OS: Android</string>
+    <string name="version">Device OS version: </string>
+    <string name="AppVersion">App Version: </string>
+    <string name="DeviceBrand">Device Brand: </string>
+    <string name="DeviceModel">Device Model: </string>
+    <string name="DeviceManufacturer">Device Manufacturer:</string>
+    <string name="Share">Share</string>
+    <string name="SaveToAlbum">Save To Album</string>
+    <string name="ShareURLMessage">Let me recommend you this application</string>
+    <string name="CompanyName">Odyssey Apps Ltd.</string>
+    <string name="PatternsTitle">Background Patterns</string>
+    <string name="AdvertisementsTitle">Advertisements</string>
+    <string name="PatternsSubitle">Unlock 200+ Background Patterns</string>
+    <string name="AdvertisementsSubitle">Remove Annoying Advertisements</string>
+    <string name="Store">Store</string>
+    <string name="ShareImage">ShareImage</string>
+
+    <string name="Done">Done</string>
+    <string name="Filter">Filter</string>
+    <string name="SuccessfullySavePhotoAlbum">Successfully Saved to Photo Album</string>
+    <string name="Share_Title">Share</string>
+    <string name="Settings">Settings</string>
+
 </resources>
